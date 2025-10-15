@@ -190,7 +190,7 @@ function hideTypingIndicator() {
 
 async function addBotResponse(userMessage) {
     try {
-        const response = await fetch('http://ai.sampc.uz/ai/chat/getdata', {
+        const response = await fetch('http://ai.sampc.uz/get-data.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

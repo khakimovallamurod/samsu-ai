@@ -1,15 +1,14 @@
 <?php
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
-require_once __DIR__ . '/vendor/autoload.php';
 
-use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 function get_url() {
-    $url = $_ENV['URL'] ?? null;
+    $url =  'https://samdu.zapier.app/api/chat';
     if (!$url) {
         throw new Exception("URL not found in .env file");
     }
@@ -23,7 +22,7 @@ function decode_response_text($resp_text) {
 
     $joined = implode("", $matches[1]);
 
-    $decoded = mb_convert_encoding($joined, "UTF-8", "UTF-16");
+    $decoded = mb_convert_encoding($joined, "UTF-8");
 
     return trim($decoded);
 }
@@ -38,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $user_message = $input['message'];
-
     $payload = [
         "blockId" => "cmgroxc0l0009nqgqabp29veu",
         "params" => [
@@ -71,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     curl_close($ch);
 
     $result_text = decode_response_text($response);
-
     if ($httpcode != 200) {
         echo json_encode([
             "status" => "error",

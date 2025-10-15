@@ -28,7 +28,7 @@ function decode_response_text($resp_text) {
     return trim($decoded);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $input = json_decode(file_get_contents("php://input"), true);
 
     if (!$input || !isset($input['message'])) {

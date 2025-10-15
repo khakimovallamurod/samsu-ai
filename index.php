@@ -98,6 +98,9 @@
                 </button>
             </div>
         </div>
+        <footer style="text-align:center; padding:10px; font-size:14px; color:#777;">
+            &copy; 2025 Sun'iy intellekt va raqamli texnologiyalar fakulteti(SAMSU) tomonidan ishlab chiqildi.
+        </footer>
     </div>
     <script src="assets/js/script.js"></script>
 </body>

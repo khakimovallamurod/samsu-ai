@@ -121,7 +121,7 @@ function addMessage(type, text, quickReplies = []) {
     const container = document.getElementById('messagesContainer');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
-    text = text.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>"); 
+
     const time = new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
     
     let quickRepliesHTML = '';
@@ -186,7 +186,7 @@ function hideTypingIndicator() {
 
 async function addBotResponse(userMessage) {
     try {
-        const response = await fetch('http://localhost/samsu-ai/get-data.php', {
+        const response = await fetch('http://ai.sampc.uz/get-data.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -225,8 +225,6 @@ function formatResponseText(text) {
     // 3️⃣ Keraksiz bo‘sh joylarni olib tashlaymiz
     return text.trim();
 }
-
-
 
 function copyToClipboard(text, button) {
     // Remove HTML tags for plain text copy

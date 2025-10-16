@@ -219,51 +219,32 @@ async function addBotResponse(userMessage) {
 }
 function formatResponseText(text) {
     if (!text) return '';
-    
-    let formatted = text.replace(/\\/g, '').trim();
 
-    // Convert numbered lists (1. 2. 3. etc)
+    let formatted = text.trim();
+
+    // Raqamli ro'yxatlar
     formatted = formatted.replace(/^(\d+)\.\s+(.+)$/gm, '<li>$2</li>');
-    
-    // Convert dash lists (- item)
-    formatted = formatted.replace(/^-\s+(.+)$/gm, '<li>$1</li>');
-    
-    // Wrap consecutive <li> tags in <ul>
-    formatted = formatted.replace(/(<li>.*?<\/li>\s*)+/g, function(match) {
-        return '<ul>' + match + '</ul>';
-    });
-    
-    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Convert *italic* to <em> tags  
-    formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    
-    formatted = formatted.replace(/\n\n/g, '</p><p>');
-    
-    formatted = formatted.replace(/\n/g, '<br>');
-    
-    if (!formatted.startsWith('<ul>') && !formatted.startsWith('<p>')) {
-        formatted = '<p>' + formatted + '</p>';
-    }
-    
-    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-    
-    formatted = formatted.replace(
-        /(?<!href=")(https?:\/\/[^\s<]+)/g, 
-        '<a href="$1" target="_blank">$1</a>'
-    );
-    
-    formatted = formatted.replace(
-        /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/g,
-        '<a href="mailto:$1">$1</a>'
-    );
-    
-    formatted = formatted.replace(
-        /(\+998\d{9}|\d{9})/g,
-        '<a href="tel:$1">$1</a>'
-    );
 
-    formatted = formatted.replace(/\\$/g, '');
+    // Dash bilan ro'yxatlar
+    formatted = formatted.replace(/^-\s+(.+)$/gm, '<li>$1</li>');
+
+    // <li> larni <ul> bilan o'rab olish
+    formatted = formatted.replace(/(<li>.*?<\/li>\s*)+/g, match => '<ul>' + match + '</ul>');
+
+    // Bold va italic
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Yangi paragraflar va line-break
+    formatted = '<p>' + formatted.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+
+    // Markdown linklar va URL
+    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+    formatted = formatted.replace(/(?<!href=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+    // Email va telefon linklari
+    formatted = formatted.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/g, '<a href="mailto:$1">$1</a>');
+    formatted = formatted.replace(/(\+998\d{9}|\d{9})/g, '<a href="tel:$1">$1</a>');
 
     return formatted;
 }

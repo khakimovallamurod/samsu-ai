@@ -21,8 +21,8 @@ function decode_response_text($resp_text) {
 
     $joined = implode("", $matches[1]);
 
-    $decoded = mb_convert_encoding($joined, "UTF-8");
-
+    $decoded = stripcslashes(mb_convert_encoding($joined, "UTF-8"));
+    $decoded = nl2br($decoded);
     return trim($decoded);
 }
 

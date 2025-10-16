@@ -235,8 +235,8 @@ function formatResponseText(text) {
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
-    // Yangi paragraflar va line-break
-    formatted = '<p>' + formatted.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+    // Faqat line-break bilan paragraflar
+    formatted = formatted.replace(/\n/g, '<br>');
 
     // Markdown linklar va URL
     formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');

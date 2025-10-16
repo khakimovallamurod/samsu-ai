@@ -214,17 +214,44 @@ async function addBotResponse(userMessage) {
     }
 }
 function formatResponseText(text) {
-    if (!text) return "";
+    if (!text) return '';
 
-    // 1️⃣ Avval ketma-ket 2 yoki undan ortiq new line'ni bittaga qisqartiramiz
-    text = text.replace(/\n{2,}/g, "\n");
+    let formatted = text.trim();
 
-    // 2️⃣ Keyin barcha new line'larni HTML'da ko‘rinadigan <br> bilan almashtiramiz
-    text = text.replace(/\n/g, "<br>");
+    // 1️⃣ Ketma-ket 2 yoki undan ortiq new line'larni bittaga qisqartiramiz
+    formatted = formatted.replace(/\n{2,}/g, '\n');
 
-    // 3️⃣ Keraksiz bo‘sh joylarni olib tashlaymiz
-    return text.trim();
+    // 2️⃣ Raqamli ro'yxatlar (1. item)
+    formatted = formatted.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+
+    // 3️⃣ Dash bilan ro'yxatlar (- item)
+    formatted = formatted.replace(/^-\s+(.+)$/gm, '<li>$1</li>');
+
+    // 4️⃣ <li> larni <ul> bilan o‘rab olish
+    formatted = formatted.replace(/(<li>.*?<\/li>\s*)+/g, match => `<ul>${match}</ul>`);
+
+    // 5️⃣ Bold va italic belgilar
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // 6️⃣ Markdown linklar va URL
+    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+    formatted = formatted.replace(/(?<!href=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+    // 7️⃣ Email va telefon raqamlarini aniqlash
+    formatted = formatted.replace(
+        /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g,
+        '<a href="mailto:$1">$1</a>'
+    );
+    formatted = formatted.replace(/(\+998\d{9}|\b\d{9}\b)/g, '<a href="tel:$1">$1</a>');
+
+    // 8️⃣ Qolgan \n larni <br> bilan almashtirish
+    formatted = formatted.replace(/\n/g, '<br>');
+
+    // 9️⃣ HTML ni tozalash
+    return formatted.trim();
 }
+
 
 function copyToClipboard(text, button) {
     // Remove HTML tags for plain text copy

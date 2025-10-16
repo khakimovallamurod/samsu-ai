@@ -16,9 +16,8 @@ function get_url() {
 }
 
 function decode_response_text($resp_text) {
-    $cleaned = str_replace("\n", "", $resp_text);
 
-    preg_match_all('/0:"(.*?)"/', $cleaned, $matches);
+    preg_match_all('/0:"(.*?)"/', $resp_text, $matches);
 
     $joined = implode("", $matches[1]);
 

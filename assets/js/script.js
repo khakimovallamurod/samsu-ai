@@ -217,13 +217,11 @@ async function addBotResponse(userMessage) {
         showToast('Tarmoq xatoligi', 'Serverga ulanib bo\'lmadi', 'warning');
     }
 }
-
 function formatResponseText(text) {
     if (!text) return '';
     
-    // Clean up the text first
-    let formatted = text.trim();
-    
+    let formatted = text.replace(/\\/g, '').trim();
+
     // Convert numbered lists (1. 2. 3. etc)
     formatted = formatted.replace(/^(\d+)\.\s+(.+)$/gm, '<li>$2</li>');
     
@@ -235,44 +233,38 @@ function formatResponseText(text) {
         return '<ul>' + match + '</ul>';
     });
     
-    // Convert **bold** to <strong> tags
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
     // Convert *italic* to <em> tags  
     formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
     
-    // Convert double line breaks to paragraphs
     formatted = formatted.replace(/\n\n/g, '</p><p>');
     
-    // Convert single line breaks to <br>
     formatted = formatted.replace(/\n/g, '<br>');
     
-    // Wrap in paragraph tags if not already wrapped
     if (!formatted.startsWith('<ul>') && !formatted.startsWith('<p>')) {
         formatted = '<p>' + formatted + '</p>';
     }
     
-    // Convert markdown links [text](url) to HTML links
     formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
     
-    // Convert plain URLs to clickable links
     formatted = formatted.replace(
         /(?<!href=")(https?:\/\/[^\s<]+)/g, 
         '<a href="$1" target="_blank">$1</a>'
     );
     
-    // Convert email addresses to mailto links
     formatted = formatted.replace(
         /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/g,
         '<a href="mailto:$1">$1</a>'
     );
     
-    // Convert phone numbers to tel links (Uzbekistan format)
     formatted = formatted.replace(
         /(\+998\d{9}|\d{9})/g,
         '<a href="tel:$1">$1</a>'
     );
-    
+
+    formatted = formatted.replace(/\\$/g, '');
+
     return formatted;
 }
 

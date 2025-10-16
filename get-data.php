@@ -22,9 +22,9 @@ function decode_response_text($resp_text) {
     $joined = implode("", $matches[1]);
 
     $decoded = stripcslashes(mb_convert_encoding($joined, "UTF-8"));
-    $decoded = nl2br($decoded);
     return trim($decoded);
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $input = json_decode(file_get_contents("php://input"), true);

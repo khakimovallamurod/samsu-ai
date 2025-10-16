@@ -121,11 +121,7 @@ function addMessage(type, text, quickReplies = []) {
     const container = document.getElementById('messagesContainer');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
-
-    text = text.replace(/\\n/g, '\n');
-
-    const formattedText = text.replace(/\n/g, '<br>');
-
+    text = text.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>"); 
     const time = new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
     
     let quickRepliesHTML = '';
@@ -144,7 +140,7 @@ function addMessage(type, text, quickReplies = []) {
     messageDiv.innerHTML = `
         <div class="message-avatar">${avatarContent}</div>
         <div class="message-content">
-            <div class="message-bubble">${formattedText}</div>
+            <div class="message-bubble">${text}</div>
             <div class="message-time">
                 <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
@@ -190,7 +186,7 @@ function hideTypingIndicator() {
 
 async function addBotResponse(userMessage) {
     try {
-        const response = await fetch('http://ai.sampc.uz/get-data.php', {
+        const response = await fetch('http://localhost/samsu-ai/get-data.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -218,36 +214,19 @@ async function addBotResponse(userMessage) {
     }
 }
 function formatResponseText(text) {
-    if (!text) return '';
+    if (!text) return "";
 
-    let formatted = text.trim();
+    // 1️⃣ Avval ketma-ket 2 yoki undan ortiq new line'ni bittaga qisqartiramiz
+    text = text.replace(/\n{2,}/g, "\n");
 
-    // Raqamli ro'yxatlar
-    formatted = formatted.replace(/^(\d+)\.\s+(.+)$/gm, '<li>$2</li>');
+    // 2️⃣ Keyin barcha new line'larni HTML'da ko‘rinadigan <br> bilan almashtiramiz
+    text = text.replace(/\n/g, "<br>");
 
-    // Dash bilan ro'yxatlar
-    formatted = formatted.replace(/^-\s+(.+)$/gm, '<li>$1</li>');
-
-    // <li> larni <ul> bilan o'rab olish
-    formatted = formatted.replace(/(<li>.*?<\/li>\s*)+/g, match => '<ul>' + match + '</ul>');
-
-    // Bold va italic
-    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-    // Faqat line-break bilan paragraflar
-    formatted = formatted.replace(/\n/g, '<br>');
-
-    // Markdown linklar va URL
-    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-    formatted = formatted.replace(/(?<!href=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
-
-    // Email va telefon linklari
-    formatted = formatted.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/g, '<a href="mailto:$1">$1</a>');
-    formatted = formatted.replace(/(\+998\d{9}|\d{9})/g, '<a href="tel:$1">$1</a>');
-
-    return formatted;
+    // 3️⃣ Keraksiz bo‘sh joylarni olib tashlaymiz
+    return text.trim();
 }
+
+
 
 function copyToClipboard(text, button) {
     // Remove HTML tags for plain text copy

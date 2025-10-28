@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ]
         ],
         "stream" => true,
-        "chatbotSessionId" => "cmgrxwbgc015z5l0y9h8dixna",
-        "predictionId" => "853ff38c-b601-497e-b503-176bbfa73be3",
+        "chatbotSessionId" => "cmhavvmhj018cae0y8cutnmvt",
+        "predictionId" => "e8391a31-c732-4480-8bf0-7f4574d657ea",
         "message" => [
             "content" => $user_message,
             "parts" => [

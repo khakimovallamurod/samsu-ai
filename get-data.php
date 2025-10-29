@@ -5,10 +5,8 @@ header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
 
-
-
 function get_url() {
-    $url =  'https://samdu.zapier.app/api/chat';
+    $url =  'https://samdu-4650fb.zapier.app/api/chat';
     if (!$url) {
         throw new Exception("URL not found in .env file");
     }
@@ -26,7 +24,7 @@ function decode_response_text($resp_text) {
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $input = json_decode(file_get_contents("php://input"), true);
 
     if (!$input || !isset($input['message'])) {
@@ -37,24 +35,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $user_message = $input['message'];
     $payload = [
-        "blockId" => "cmgroxc0l0009nqgqabp29veu",
+        "id" => "cmhbilzca07jl670yno3zwssu",
+        "blockId" => "cmh7gy4qn001vm073rv8qcpw9",
         "params" => [
             "params" => [
-                "publishedPageParams" => ["samdu"]
+                "publishedPageParams" => ["samdu-4650fb"]
             ]
         ],
-        "stream" => true,
-        "chatbotSessionId" => "cmhavvmhj018cae0y8cutnmvt",
-        "predictionId" => "e8391a31-c732-4480-8bf0-7f4574d657ea",
+        "stream" => false,
+        "chatbotSessionId" => "cmhbilzca07jl670yno3zwssu",
+        "predictionId" => "af48e19d-39fc-425c-ab8c-b0431b8d3c84",
+        "useLegacyStreamFormat" => true,
         "message" => [
             "content" => $user_message,
-            "parts" => [
-                ["type" => "text", "text" => $user_message]
-            ],
             "role" => "user"
-        ]
+        ],
+        "mode" => "public"
     ];
-
     $url = get_url();
 
     $ch = curl_init($url);
